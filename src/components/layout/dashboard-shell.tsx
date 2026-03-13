@@ -14,9 +14,12 @@ export function DashboardShell({ children }: { children: ReactNode }) {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <SidebarTrigger />
-                <div className="min-w-0">
+                <div className="min-w-0 space-y-0.5">
                   <p className="text-sm font-semibold leading-tight tracking-tight">
-                    Blood🩸Doctor Haemoglobinopathy Intelligence Hub
+                    Blood🩸Doctor
+                  </p>
+                  <p className="text-xs font-medium leading-snug text-foreground/80">
+                    Haemoglobinopathy Intelligence Hub
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Dr Abdul Mannan FRCPath FCPS
@@ -28,7 +31,11 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           </header>
           <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
           <footer className="border-t border-border/70 bg-background/80 px-4 py-3 text-center text-xs text-muted-foreground md:px-6">
-            Dr Abdul Mannan FRCPath FCPS - Blood🩸Doctor - blooddoctor.co@gmail.com
+            <div className="space-y-1 leading-snug">
+              <p>Dr Abdul Mannan FRCPath FCPS</p>
+              <p>Blood🩸Doctor</p>
+              <p>blooddoctor.co@gmail.com</p>
+            </div>
           </footer>
         </div>
       </SidebarInset>
