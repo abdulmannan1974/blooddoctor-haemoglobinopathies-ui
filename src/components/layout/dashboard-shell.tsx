@@ -16,7 +16,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                 <SidebarTrigger />
                 <div className="min-w-0">
                   <p className="text-sm font-semibold leading-tight tracking-tight">
-                    Blood🩸Doctor | Haemoglobinopathy Intelligence Hub
+                    Blood🩸Doctor Haemoglobinopathy Intelligence Hub
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Dr Abdul Mannan FRCPath FCPS
@@ -28,7 +28,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           </header>
           <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
           <footer className="border-t border-border/70 bg-background/80 px-4 py-3 text-center text-xs text-muted-foreground md:px-6">
-            Dr Abdul Mannan FRCPath FCPS I Blood🩸Doctor I blooddoctor.co@gmail.com
+            Dr Abdul Mannan FRCPath FCPS - Blood🩸Doctor - blooddoctor.co@gmail.com
           </footer>
         </div>
       </SidebarInset>
