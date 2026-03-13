@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 import CaseDetailPage from "@/app/cases/[caseNumber]/page"
 import ComparePage from "@/app/compare/page"
 import HomePage from "@/app/page"
+import RiskCalculatorPage from "@/app/risk-calculator/page"
 import VariantDetailPage from "@/app/variants/[slug]/page"
 
 const replace = vi.fn()
@@ -67,5 +68,20 @@ describe("route rendering", () => {
 
     expect(screen.getByText(/variant comparison matrix/i)).toBeInTheDocument()
     expect(screen.getAllByText(/hb a2/i).length).toBeGreaterThan(1)
+  })
+
+  it("renders the risk calculator route", async () => {
+    render(
+      await RiskCalculatorPage({
+        searchParams: { variant: "hb-c-harlem" },
+      })
+    )
+
+    expect(
+      screen.getByRole("heading", {
+        name: /molecular risk calculator for haemoglobin variants/i,
+      })
+    ).toBeInTheDocument()
+    expect(screen.getByText(/live score/i)).toBeInTheDocument()
   })
 })

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   BookOpenText,
+  Calculator,
   LayoutDashboard,
   Scale,
   Search,
@@ -26,6 +27,7 @@ import {
 
 const primaryNav = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/risk-calculator", label: "Risk Calculator", icon: Calculator },
   { href: "/variants", label: "Variant Explorer", icon: Search },
   { href: "/cases", label: "Case Atlas", icon: TableProperties },
   { href: "/compare", label: "Compare", icon: Scale },

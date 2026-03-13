@@ -117,3 +117,51 @@ export type ExplorerSearchState = {
   compare?: string
 }
 
+export type RiskTier =
+  | "TIER 1 — HIGH RISK"
+  | "TIER 2 — MODERATE RISK"
+  | "TIER 3 — LOW RISK"
+  | "TIER 4 — BENIGN/MINIMAL"
+
+export type RiskActionLevel = "URGENT" | "IMPORTANT" | "ROUTINE" | "MINIMAL"
+
+export type RiskDomainKey =
+  | "sickle"
+  | "stability"
+  | "clinical"
+  | "oxygen"
+  | "thal"
+  | "heinz"
+  | "genetic"
+
+export type RiskDomainScoreMap = Record<RiskDomainKey, number>
+
+export type RiskDomainContribution = {
+  key: RiskDomainKey
+  label: string
+  score: number
+  maxScore: number
+  detail: string
+}
+
+export type RiskActionGuidance = {
+  level: RiskActionLevel
+  specialist: string
+  geneticCounselling: string
+  familyScreening: string
+  monitoring: string
+  surgery: string
+  pregnancy: string
+}
+
+export type RiskAssessment = {
+  score: number
+  maxScore: number
+  tier: RiskTier
+  actionLevel: RiskActionLevel
+  colorToken: "risk-high" | "risk-moderate" | "risk-low" | "risk-minimal"
+  rationale: string
+  contributions: RiskDomainContribution[]
+  flags: string[]
+  actions: RiskActionGuidance
+}

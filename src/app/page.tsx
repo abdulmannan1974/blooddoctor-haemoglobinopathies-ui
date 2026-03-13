@@ -81,6 +81,11 @@ export default function HomePage() {
           <CardContent className="space-y-3">
             {[
               {
+                href: "/risk-calculator",
+                title: "Risk calculator",
+                description: "Preload any variant and refine the risk domains live.",
+              },
+              {
                 href: "/variants",
                 title: "Variant explorer",
                 description: "Search by name, mutation, chain, zone, and zygosity.",
@@ -162,4 +167,3 @@ export default function HomePage() {
     </div>
   )
 }
-
