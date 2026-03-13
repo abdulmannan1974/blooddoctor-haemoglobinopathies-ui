@@ -15,8 +15,8 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               <div className="flex items-center gap-3">
                 <SidebarTrigger />
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold tracking-tight">
-                    Blood🩸Doctor
+                  <p className="text-sm font-semibold leading-tight tracking-tight">
+                    Blood🩸Doctor | Haemoglobinopathy Intelligence Hub
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Dr Abdul Mannan FRCPath FCPS

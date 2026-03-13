@@ -42,10 +42,10 @@ export function AppSidebar() {
             <BookOpenText className="size-5" />
           </div>
           <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
-            <p className="truncate text-sm font-semibold tracking-tight">
-              Blood🩸Doctor
+            <p className="text-sm font-semibold leading-tight tracking-tight">
+              Blood🩸Doctor | Haemoglobinopathy Intelligence Hub
             </p>
-            <p className="truncate text-xs text-sidebar-foreground/70">
+            <p className="text-xs text-sidebar-foreground/70">
               Dr Abdul Mannan FRCPath FCPS
             </p>
           </div>
