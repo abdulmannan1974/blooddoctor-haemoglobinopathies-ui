@@ -37,7 +37,7 @@ export function AppSidebar() {
   return (
     <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader className="border-b border-sidebar-border/70">
-        <div className="flex items-start gap-3 px-2 py-3">
+        <div className="flex items-start gap-3 px-2 py-3 group-data-[collapsible=icon]:w-full group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:gap-0">
           <div className="flex size-11 shrink-0 items-center justify-center rounded-[1.5rem] bg-sidebar-primary text-sidebar-primary-foreground shadow-sm">
             <BookOpenText className="size-5" />
           </div>
