@@ -1,6 +1,6 @@
 "use client"
 
-import { startTransition, useEffect, useState } from "react"
+import { startTransition } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Scale } from "lucide-react"
 
@@ -16,28 +16,24 @@ function nextCompareList(ids: string[], value: string) {
 
 export function CompareButton({
   recordId,
-  compareIds,
+  compareIds = [],
   onChange,
 }: {
   recordId: string
-  compareIds: string[]
+  compareIds?: string[]
   onChange?: (value: string[]) => void
 }) {
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [selectedIds, setSelectedIds] = useState(compareIds)
-
-  useEffect(() => {
-    setSelectedIds(compareIds)
-  }, [compareIds])
+  const selectedIds =
+    searchParams.get("compare")?.split(",").filter(Boolean) ?? compareIds
 
   const isSelected = selectedIds.includes(recordId)
   const isDisabled = selectedIds.length >= 2 && !isSelected
 
   function onToggle() {
     const nextIds = nextCompareList(selectedIds, recordId)
-    setSelectedIds(nextIds)
     onChange?.(nextIds)
 
     const params = new URLSearchParams(searchParams.toString())

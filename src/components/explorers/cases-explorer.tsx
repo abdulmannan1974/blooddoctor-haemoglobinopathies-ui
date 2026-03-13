@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { startTransition, useDeferredValue, useState } from "react"
-import { usePathname, useRouter } from "next/navigation"
+import { startTransition, useDeferredValue } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { DataTable } from "@/components/blocks/data-table"
 import { EmptyState } from "@/components/blocks/empty-state"
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { CaseRecord, ExplorerSearchState, FilterOption } from "@/types/domain"
+import type { CaseRecord, FilterOption } from "@/types/domain"
 
 type CasesExplorerProps = {
   records: CaseRecord[]
@@ -26,7 +26,6 @@ type CasesExplorerProps = {
     classes: FilterOption[]
     ethnicities: FilterOption[]
   }
-  initialState: ExplorerSearchState
 }
 
 function sortCases(records: CaseRecord[], sort: string) {
@@ -43,20 +42,15 @@ function sortCases(records: CaseRecord[], sort: string) {
   return items.sort((left, right) => Number(left.caseNumber) - Number(right.caseNumber))
 }
 
-export function CasesExplorer({
-  records,
-  options,
-  initialState,
-}: CasesExplorerProps) {
+export function CasesExplorer({ records, options }: CasesExplorerProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const [query, setQuery] = useState(initialState.q ?? "")
-  const [variantClass, setVariantClass] = useState(initialState.class ?? "all")
-  const [ethnicity, setEthnicity] = useState(initialState.ethnicity ?? "all")
-  const [sort, setSort] = useState(initialState.sort ?? "number")
-  const [compareIds, setCompareIds] = useState(
-    initialState.compare?.split(",").filter(Boolean) ?? []
-  )
+  const searchParams = useSearchParams()
+  const query = searchParams.get("q") ?? ""
+  const variantClass = searchParams.get("class") ?? "all"
+  const ethnicity = searchParams.get("ethnicity") ?? "all"
+  const sort = searchParams.get("sort") ?? "number"
+  const compareIds = searchParams.get("compare")?.split(",").filter(Boolean) ?? []
   const deferredQuery = useDeferredValue(query)
 
   function syncUrl(nextState: Record<string, string>) {
@@ -73,7 +67,9 @@ export function CasesExplorer({
     })
   }
 
-  function updateState(partial: Partial<Record<"q" | "class" | "ethnicity" | "sort" | "compare", string>>) {
+  function updateState(
+    partial: Partial<Record<"q" | "class" | "ethnicity" | "sort" | "compare", string>>
+  ) {
     syncUrl({
       q: partial.q ?? query,
       class: partial.class ?? variantClass,
@@ -147,10 +143,7 @@ export function CasesExplorer({
       <CompareButton
         recordId={record.caseNumber}
         compareIds={compareIds}
-        onChange={(nextIds) => {
-          setCompareIds(nextIds)
-          updateState({ compare: nextIds.join(",") })
-        }}
+        onChange={(nextIds) => updateState({ compare: nextIds.join(",") })}
       />
       <Button asChild size="sm" variant="ghost">
         <Link href={`/cases/${record.caseNumber}`}>Open</Link>
@@ -167,20 +160,13 @@ export function CasesExplorer({
           <div className="grid gap-3 md:grid-cols-3">
             <Input
               value={query}
-              onChange={(event) => {
-                const nextValue = event.target.value
-                setQuery(nextValue)
-                updateState({ q: nextValue })
-              }}
+              onChange={(event) => updateState({ q: event.target.value })}
               placeholder="Search case number, Hb name, genotype, or findings"
               aria-label="Search cases"
             />
             <Select
               value={variantClass}
-              onValueChange={(value) => {
-                setVariantClass(value)
-                updateState({ class: value })
-              }}
+              onValueChange={(value) => updateState({ class: value })}
             >
               <SelectTrigger aria-label="Filter by case class">
                 <SelectValue placeholder="Case class" />
@@ -196,10 +182,7 @@ export function CasesExplorer({
             </Select>
             <Select
               value={ethnicity}
-              onValueChange={(value) => {
-                setEthnicity(value)
-                updateState({ ethnicity: value })
-              }}
+              onValueChange={(value) => updateState({ ethnicity: value })}
             >
               <SelectTrigger aria-label="Filter by ethnicity">
                 <SelectValue placeholder="Ethnicity" />
@@ -217,13 +200,7 @@ export function CasesExplorer({
         }
         chips={
           <div className="flex flex-wrap items-center gap-2">
-            <Select
-              value={sort}
-              onValueChange={(value) => {
-                setSort(value)
-                updateState({ sort: value })
-              }}
-            >
+            <Select value={sort} onValueChange={(value) => updateState({ sort: value })}>
               <SelectTrigger className="w-full md:w-52" aria-label="Sort cases">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
@@ -240,19 +217,7 @@ export function CasesExplorer({
                 </Link>
               </Button>
             ) : null}
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setQuery("")
-                setVariantClass("all")
-                setEthnicity("all")
-                setSort("number")
-                setCompareIds([])
-                syncUrl({})
-              }}
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={() => syncUrl({})}>
               Clear all
             </Button>
           </div>

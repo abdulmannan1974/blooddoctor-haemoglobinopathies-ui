@@ -40,7 +40,6 @@ describe("route rendering", () => {
     render(
       await VariantDetailPage({
         params: Promise.resolve({ slug: "hb-a2-babinga" }),
-        searchParams: Promise.resolve({ compare: "hb-a2-babinga,hb-a2-coburg" }),
       })
     )
 
@@ -54,7 +53,6 @@ describe("route rendering", () => {
     render(
       await CaseDetailPage({
         params: Promise.resolve({ caseNumber: "1" }),
-        searchParams: Promise.resolve({ compare: "1,2" }),
       })
     )
 
@@ -65,13 +63,7 @@ describe("route rendering", () => {
   })
 
   it("renders the comparison matrix for two variants", async () => {
-    render(
-      await ComparePage({
-        searchParams: Promise.resolve({
-          compare: "hb-a2-babinga,hb-a2-coburg",
-        }),
-      })
-    )
+    render(await ComparePage())
 
     expect(screen.getByText(/variant comparison matrix/i)).toBeInTheDocument()
     expect(screen.getAllByText(/hb a2/i).length).toBeGreaterThan(1)

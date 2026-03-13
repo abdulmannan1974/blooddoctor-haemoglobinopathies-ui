@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -10,18 +11,23 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { displayValue } from "@/lib/format"
-import { getAllVariants, getCaseByNumber } from "@/lib/data"
+import { getAllCases, getAllVariants, getCaseByNumber } from "@/lib/data"
+
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return getAllCases().map((item) => ({
+    caseNumber: item.caseNumber,
+  }))
+}
 
 export default async function CaseDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ caseNumber: string }>
-  searchParams: Promise<{ compare?: string }>
 }) {
   const { caseNumber } = await params
   const caseRecord = getCaseByNumber(caseNumber)
-  const compare = (await searchParams).compare?.split(",").filter(Boolean) ?? []
 
   if (!caseRecord) {
     notFound()
@@ -39,7 +45,9 @@ export default async function CaseDetailPage({
         description={caseRecord.clinicalFindings || caseRecord.description || "No narrative summary recorded for this case."}
         action={
           <div className="flex flex-wrap gap-3">
-            <CompareButton recordId={caseRecord.caseNumber} compareIds={compare} />
+            <Suspense fallback={<Button size="sm" disabled>Loading compare</Button>}>
+              <CompareButton recordId={caseRecord.caseNumber} />
+            </Suspense>
             <Button asChild variant="outline">
               <Link href="/cases">Back to case atlas</Link>
             </Button>
@@ -133,4 +141,3 @@ export default async function CaseDetailPage({
     </div>
   )
 }
-

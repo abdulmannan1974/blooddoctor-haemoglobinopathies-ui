@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { startTransition, useDeferredValue, useState } from "react"
-import { usePathname, useRouter } from "next/navigation"
+import { startTransition, useDeferredValue } from "react"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 import { DataTable } from "@/components/blocks/data-table"
 import { EmptyState } from "@/components/blocks/empty-state"
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { ExplorerSearchState, FilterOption, VariantRecord } from "@/types/domain"
+import type { FilterOption, VariantRecord } from "@/types/domain"
 
 type VariantExplorerProps = {
   records: VariantRecord[]
@@ -27,7 +27,6 @@ type VariantExplorerProps = {
     zones: FilterOption[]
     statuses: FilterOption[]
   }
-  initialState: ExplorerSearchState
 }
 
 function sortVariants(records: VariantRecord[], sort: string) {
@@ -48,21 +47,16 @@ function sortVariants(records: VariantRecord[], sort: string) {
   return items.sort((left, right) => left.name.localeCompare(right.name))
 }
 
-export function VariantsExplorer({
-  records,
-  options,
-  initialState,
-}: VariantExplorerProps) {
+export function VariantsExplorer({ records, options }: VariantExplorerProps) {
   const pathname = usePathname()
   const router = useRouter()
-  const [query, setQuery] = useState(initialState.q ?? "")
-  const [chain, setChain] = useState(initialState.chain ?? "all")
-  const [zone, setZone] = useState(initialState.zone ?? "all")
-  const [status, setStatus] = useState(initialState.status ?? "all")
-  const [sort, setSort] = useState(initialState.sort ?? "name")
-  const [compareIds, setCompareIds] = useState(
-    initialState.compare?.split(",").filter(Boolean) ?? []
-  )
+  const searchParams = useSearchParams()
+  const query = searchParams.get("q") ?? ""
+  const chain = searchParams.get("chain") ?? "all"
+  const zone = searchParams.get("zone") ?? "all"
+  const status = searchParams.get("status") ?? "all"
+  const sort = searchParams.get("sort") ?? "name"
+  const compareIds = searchParams.get("compare")?.split(",").filter(Boolean) ?? []
   const deferredQuery = useDeferredValue(query)
 
   function syncUrl(nextState: Record<string, string>) {
@@ -79,17 +73,17 @@ export function VariantsExplorer({
     })
   }
 
-  function updateState(partial: Partial<Record<"q" | "chain" | "zone" | "status" | "sort" | "compare", string>>) {
-    const nextState = {
+  function updateState(
+    partial: Partial<Record<"q" | "chain" | "zone" | "status" | "sort" | "compare", string>>
+  ) {
+    syncUrl({
       q: partial.q ?? query,
       chain: partial.chain ?? chain,
       zone: partial.zone ?? zone,
       status: partial.status ?? status,
       sort: partial.sort ?? sort,
       compare: partial.compare ?? compareIds.join(","),
-    }
-
-    syncUrl(nextState)
+    })
   }
 
   const visibleRecords = sortVariants(
@@ -134,13 +128,13 @@ export function VariantsExplorer({
         {record.name}
       </Link>
       <p className="text-xs text-muted-foreground">
-        {(record.alternateNames.join(", ") || "No alternate names listed")}
+        {record.alternateNames.join(", ") || "No alternate names listed"}
       </p>
     </div>,
     <div key={`${record.slug}-classification`} className="space-y-2">
       <p>{record.globinChains.join(", ") || "Not available"}</p>
       <div className="flex flex-wrap gap-2">
-      {record.statuses.map((item) => (
+        {record.statuses.map((item) => (
           <Badge key={item} variant="secondary">
             {item}
           </Badge>
@@ -158,10 +152,7 @@ export function VariantsExplorer({
       <CompareButton
         recordId={record.slug}
         compareIds={compareIds}
-        onChange={(nextIds) => {
-          setCompareIds(nextIds)
-          updateState({ compare: nextIds.join(",") })
-        }}
+        onChange={(nextIds) => updateState({ compare: nextIds.join(",") })}
       />
       <Button asChild size="sm" variant="ghost">
         <Link href={`/variants/${record.slug}`}>Open</Link>
@@ -178,21 +169,11 @@ export function VariantsExplorer({
           <div className="grid gap-3 md:grid-cols-4">
             <Input
               value={query}
-              onChange={(event) => {
-                const nextValue = event.target.value
-                setQuery(nextValue)
-                updateState({ q: nextValue })
-              }}
+              onChange={(event) => updateState({ q: event.target.value })}
               placeholder="Search Hb name, mutation, or notes"
               aria-label="Search variants"
             />
-            <Select
-              value={chain}
-              onValueChange={(value) => {
-                setChain(value)
-                updateState({ chain: value })
-              }}
-            >
+            <Select value={chain} onValueChange={(value) => updateState({ chain: value })}>
               <SelectTrigger aria-label="Filter by globin chain">
                 <SelectValue placeholder="Globin chain" />
               </SelectTrigger>
@@ -205,13 +186,7 @@ export function VariantsExplorer({
                 ))}
               </SelectContent>
             </Select>
-            <Select
-              value={zone}
-              onValueChange={(value) => {
-                setZone(value)
-                updateState({ zone: value })
-              }}
-            >
+            <Select value={zone} onValueChange={(value) => updateState({ zone: value })}>
               <SelectTrigger aria-label="Filter by migration zone">
                 <SelectValue placeholder="Migration zone" />
               </SelectTrigger>
@@ -224,13 +199,7 @@ export function VariantsExplorer({
                 ))}
               </SelectContent>
             </Select>
-            <Select
-              value={status}
-              onValueChange={(value) => {
-                setStatus(value)
-                updateState({ status: value })
-              }}
-            >
+            <Select value={status} onValueChange={(value) => updateState({ status: value })}>
               <SelectTrigger aria-label="Filter by status">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -247,13 +216,7 @@ export function VariantsExplorer({
         }
         chips={
           <div className="flex flex-wrap items-center gap-2">
-            <Select
-              value={sort}
-              onValueChange={(value) => {
-                setSort(value)
-                updateState({ sort: value })
-              }}
-            >
+            <Select value={sort} onValueChange={(value) => updateState({ sort: value })}>
               <SelectTrigger className="w-full md:w-52" aria-label="Sort variants">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
@@ -270,27 +233,20 @@ export function VariantsExplorer({
                 </Link>
               </Button>
             ) : null}
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setQuery("")
-                setChain("all")
-                setZone("all")
-                setStatus("all")
-                setSort("name")
-                setCompareIds([])
-                syncUrl({})
-              }}
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={() => syncUrl({})}>
               Clear all
             </Button>
           </div>
         }
       />
       <DataTable
-        columns={["Variant", "Classification", "Migration / mutation", "Clinical teaching notes", "Actions"]}
+        columns={[
+          "Variant",
+          "Classification",
+          "Migration / mutation",
+          "Clinical teaching notes",
+          "Actions",
+        ]}
         rows={rows}
         emptyState={
           <EmptyState

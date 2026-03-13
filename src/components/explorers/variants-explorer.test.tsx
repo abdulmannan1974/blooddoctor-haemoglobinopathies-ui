@@ -8,16 +8,18 @@ import { VariantsExplorer } from "@/components/explorers/variants-explorer"
 import { getAllVariants, getVariantFilterOptions } from "@/lib/data"
 
 const replace = vi.fn()
+let currentSearch = ""
 
 vi.mock("next/navigation", () => ({
   usePathname: () => "/variants",
   useRouter: () => ({ replace }),
-  useSearchParams: () => new URLSearchParams(""),
+  useSearchParams: () => new URLSearchParams(currentSearch),
 }))
 
 describe("VariantsExplorer", () => {
   beforeEach(() => {
     replace.mockReset()
+    currentSearch = ""
   })
 
   it("persists search state into the URL", () => {
@@ -25,7 +27,6 @@ describe("VariantsExplorer", () => {
       <VariantsExplorer
         records={getAllVariants().slice(0, 8)}
         options={getVariantFilterOptions()}
-        initialState={{}}
       />
     )
 
@@ -41,7 +42,6 @@ describe("VariantsExplorer", () => {
       <VariantsExplorer
         records={getAllVariants().slice(0, 4)}
         options={getVariantFilterOptions()}
-        initialState={{}}
       />
     )
 
@@ -49,15 +49,16 @@ describe("VariantsExplorer", () => {
     expect(link).toHaveAttribute("href", "/variants/hb-a2-babinga")
 
     fireEvent.click(screen.getAllByRole("button", { name: /add to compare/i })[0])
-    expect(screen.getByRole("link", { name: /open compare \(1\)/i })).toBeInTheDocument()
+    expect(replace).toHaveBeenCalledWith(expect.stringContaining("compare=hb-a2-babinga"))
   })
 
   it("shows the empty state when no records match", () => {
+    currentSearch = "q=definitely-not-a-variant"
+
     render(
       <VariantsExplorer
         records={getAllVariants().slice(0, 4)}
         options={getVariantFilterOptions()}
-        initialState={{ q: "definitely-not-a-variant" }}
       />
     )
 
@@ -71,7 +72,6 @@ describe("VariantsExplorer", () => {
       <VariantsExplorer
         records={getAllVariants().slice(0, 6)}
         options={getVariantFilterOptions()}
-        initialState={{}}
       />
     )
 

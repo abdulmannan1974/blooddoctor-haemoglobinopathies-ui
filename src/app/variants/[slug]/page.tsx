@@ -1,3 +1,4 @@
+import { Suspense } from "react"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -12,18 +13,23 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { displayValue } from "@/lib/format"
-import { getVariantBySlug } from "@/lib/data"
+import { getAllVariants, getVariantBySlug } from "@/lib/data"
+
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return getAllVariants().map((variant) => ({
+    slug: variant.slug,
+  }))
+}
 
 export default async function VariantDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ compare?: string }>
 }) {
   const { slug } = await params
   const variant = getVariantBySlug(slug)
-  const compare = (await searchParams).compare?.split(",").filter(Boolean) ?? []
 
   if (!variant) {
     notFound()
@@ -37,7 +43,9 @@ export default async function VariantDetailPage({
         description={variant.clinicalSummary || variant.haematologyComments || "No summary recorded for this variant."}
         action={
           <div className="flex flex-wrap gap-3">
-            <CompareButton recordId={variant.slug} compareIds={compare} />
+            <Suspense fallback={<Button size="sm" disabled>Loading compare</Button>}>
+              <CompareButton recordId={variant.slug} />
+            </Suspense>
             <Button asChild variant="outline">
               <Link href="/variants">Back to explorer</Link>
             </Button>
@@ -150,4 +158,3 @@ export default async function VariantDetailPage({
     </div>
   )
 }
-
