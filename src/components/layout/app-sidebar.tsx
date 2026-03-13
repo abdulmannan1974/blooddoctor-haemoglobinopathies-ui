@@ -43,10 +43,10 @@ export function AppSidebar() {
           </div>
           <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
             <p className="truncate text-sm font-semibold tracking-tight">
-              Haemoglobinopathy Hub
+              Blood🩸Doctor
             </p>
             <p className="truncate text-xs text-sidebar-foreground/70">
-              Clinical teaching dashboard
+              Dr Abdul Mannan FRCPath FCPS
             </p>
           </div>
         </div>
@@ -78,11 +78,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border/70 p-4 text-xs text-sidebar-foreground/70 group-data-[collapsible=icon]:hidden">
-        Evidence-first educator workspace for structured variant lookup and case comparison.
+      <SidebarFooter className="border-t border-sidebar-border/70 p-4 text-xs leading-5 text-sidebar-foreground/70 group-data-[collapsible=icon]:hidden">
+        Dr Abdul Mannan FRCPath FCPS I Blood🩸Doctor I blooddoctor.co@gmail.com
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   )
 }
-

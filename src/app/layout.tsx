@@ -8,8 +8,8 @@ import { DashboardShell } from "@/components/layout/dashboard-shell";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: "BloodDoctor Haemoglobinopathies",
-  description: "Clinician educator dashboard for haemoglobin variants, case atlas review, and side-by-side comparison.",
+  title: "Blood🩸Doctor | Dr Abdul Mannan FRCPath FCPS",
+  description: "Blood🩸Doctor educator dashboard by Dr Abdul Mannan FRCPath FCPS for haemoglobin variants, case atlas review, and side-by-side comparison.",
 };
 
 export default function RootLayout({

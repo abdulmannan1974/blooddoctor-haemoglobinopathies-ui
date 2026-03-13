@@ -16,10 +16,10 @@ export function DashboardShell({ children }: { children: ReactNode }) {
                 <SidebarTrigger />
                 <div className="min-w-0">
                   <p className="text-sm font-semibold tracking-tight">
-                    BloodDoctor Haemoglobinopathies
+                    Blood🩸Doctor
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Standardised shadcn educator workspace
+                    Dr Abdul Mannan FRCPath FCPS
                   </p>
                 </div>
               </div>
@@ -27,9 +27,11 @@ export function DashboardShell({ children }: { children: ReactNode }) {
             </div>
           </header>
           <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
+          <footer className="border-t border-border/70 bg-background/80 px-4 py-3 text-center text-xs text-muted-foreground md:px-6">
+            Dr Abdul Mannan FRCPath FCPS I Blood🩸Doctor I blooddoctor.co@gmail.com
+          </footer>
         </div>
       </SidebarInset>
     </SidebarProvider>
   )
 }
-
